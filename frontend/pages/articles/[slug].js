@@ -1,8 +1,7 @@
-import Axios from "axios";
 import ReactMarkdown from "react-markdown";
+import Api from '../../service/api'
 
 function Articles({ article: { attributes} }) {
-  console.log({attributes})
   return (
     <div>
       <img src={`http://localhost:1337${attributes.image.data.attributes.url}`}/>
@@ -19,8 +18,8 @@ function Articles({ article: { attributes} }) {
 // revalidation is enabled and a new request comes in
 export async function getStaticProps({ params }) {
   try {
-    const { data } = await Axios(
-      `http://localhost:1337/api/blogs?populate=image&filters[url]=${[
+    const { data } = await Api.get(
+      `/blogs?populate=image&filters[url]=${[
         params.slug,
       ]}`
     );
@@ -35,7 +34,7 @@ export async function getStaticProps({ params }) {
       revalidate: 10, // In seconds
     };
   } catch (error) {
-    console.log(error);
+    return { props: {}}
   }
 }
 
